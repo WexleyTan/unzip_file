@@ -9,8 +9,8 @@ pipeline {
                     sh """
                         if [ -f 'auto_deploy.zip' ]; then
                             echo "Removing existing files..."
-                            rm -rf demo/
-                            unzip -o auto_deploy.zip -d demo/  # Unzip into the demo directory
+                            rm -rf auto_deploy/
+                            unzip -o auto_deploy.zip -d demo/  
                         else
                             echo "File 'auto_deploy.zip' does not exist, skipping unzip."
                         fi
@@ -24,9 +24,8 @@ pipeline {
                 script {
                     echo "Checking for POM file before building the Maven project..."
                     sh """
-                        if [ -f 'demo/pom.xml' ]; then
+                        if [ -f 'auto_deploy/pom.xml' ]; then
                             echo "Building the Maven project..."
-                            cd demo  # Change directory to the unzipped project
                             mvn clean install
                         else
                             echo "POM file not found, cannot build the project."
@@ -35,7 +34,7 @@ pipeline {
                     """
 
                     echo "Building Docker image..."
-                    sh 'docker build -t springboot_jenkins demo/' 
+                    sh 'docker build -t springboot_jenkins auto_deploy/' 
                 }
             }
         }
