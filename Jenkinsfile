@@ -35,7 +35,7 @@ pipeline {
                     """
 
                     echo "Building Docker image..."
-                    sh 'docker build -t springboot_jenkins demo/'  # Specify the correct path for Docker build
+                    sh 'docker build -t springboot_jenkins demo/' 
                 }
             }
         }
