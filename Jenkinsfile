@@ -10,9 +10,9 @@ pipeline {
                         if [ -f 'demo.zip' ]; then
                             echo "Removing existing files..."
                             rm -rf demo/
-                            unzip demo.zip
+                            unzip auto_deploy.zip
                         else
-                            echo "File 'demo.zip' does not exist, skipping unzip."
+                            echo "File 'auto_deploy.zip' does not exist, skipping unzip."
                         fi
                     """
                 }
