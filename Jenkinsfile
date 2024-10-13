@@ -14,11 +14,9 @@ pipeline {
                     sh '''
                         if [ -f "${UNZIP_FILE}" ]; then
                             echo "Removing existing files..."
-                            rm -rf "${UNZIP_FILE}" to remove all files in the current directory
+                            rm -rf * 
                             echo "Unzipping the file..."
-                            unzip -o "${UNZIP_FILE}" -d demo/
-                        else
-                            echo "${UNZIP_FILE} does not exist."
+                            unzip -o "${UNZIP_FILE}" 
                         fi
                     '''
                 }
