@@ -1,7 +1,6 @@
 pipeline {
     agent any
-    environment {
-        UNZIP_FILE = "auto_deploy.zip"
+     environment {
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
@@ -10,15 +9,14 @@ pipeline {
         stage('Unzip File') {
             steps {
                 script {
-                    echo "Checking if the file '${env.UNZIP_FILE}' exists and unzipping it if present..."
-                    sh '''
-                        if [ -f "${UNZIP_FILE}" ]; then
+                    echo "Checking if the file 'auto_deploy.zip' exists and unzipping it if present..."
+                    sh """
+                        if [ -f 'auto_deploy.zip' ]; then
                             echo "Removing existing files..."
-                            rm -rf * 
-                            echo "Unzipping the file..."
-                            unzip -o "${UNZIP_FILE}" 
+                            rm -rf auto_deploy/
+                            unzip -o auto_deploy.zip -d demo/  
                         fi
-                    '''
+                    """
                 }
             }
         }
@@ -26,9 +24,11 @@ pipeline {
         stage("Build") {
             steps {
                 script {
+                    echo "Building the Maven project..."
+                    sh 'mvn clean install'
+
                     echo "Building Docker image..."
-                    // Specify the directory if needed
-                    sh "docker build -t ${DOCKER_IMAGE} ." // Adjust path if necessary
+                    sh 'docker build -t ${DOCKER_IMAGE} .' 
                 }
             }
         }
