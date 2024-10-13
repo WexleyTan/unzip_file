@@ -14,7 +14,7 @@ pipeline {
                     sh '''
                         if [ -f "${UNZIP_FILE}" ]; then
                             echo "Removing existing files..."
-                            rm -rf *  # Use * to remove all files in the current directory
+                            rm -rf "${UNZIP_FILE}" to remove all files in the current directory
                             echo "Unzipping the file..."
                             unzip -o "${UNZIP_FILE}" -d demo/
                         else
