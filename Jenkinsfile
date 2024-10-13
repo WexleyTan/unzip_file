@@ -30,21 +30,5 @@ pipeline {
             }
         }
 
-        stage("Deploy") {
-            steps {
-                script {
-                    echo "Deploying the Docker container..."
-                    sh '''
-                        if [ "$(docker ps -q -f name=springboot_jenkins-v1)" ]; then
-                            echo "Starting existing container..."
-                            docker start springboot_jenkins-v1
-                        else
-                            echo "Running a new container..."
-                            docker run --name springboot_jenkins-v1 -d -p 9090:8080 unzip_jenkins
-                        fi
-                    '''
-                }
-            }
-        }
     }
 }
