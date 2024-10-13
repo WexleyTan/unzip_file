@@ -1,6 +1,6 @@
 pipeline {
     agent any
-     environment {
+    environment {
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
@@ -14,7 +14,10 @@ pipeline {
                         if [ -f 'auto_deploy.zip' ]; then
                             echo "Removing existing files..."
                             rm -rf auto_deploy/
+                            echo "Unzipping the file..."
                             unzip -o auto_deploy.zip -d demo/  
+                        else
+                            echo "'auto_deploy.zip' does not exist."
                         fi
                     """
                 }
@@ -24,13 +27,17 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    echo "Building the Maven project..."
-                    sh 'mvn clean install'
+                    echo "Navigating to the project directory..."
+                    dir('path/to/your/project/directory') { // Update this path as necessary
+                        echo "Building the Maven project..."
+                        sh 'mvn clean install'
 
-                    echo "Building Docker image..."
-                    sh 'docker build -t ${DOCKER_IMAGE} .' 
+                        echo "Building Docker image..."
+                        sh "docker build -t ${DOCKER_IMAGE} ."
+                    }
                 }
             }
         }
     }
 }
+
