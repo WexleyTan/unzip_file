@@ -40,14 +40,11 @@ pipeline {
                         if [ -f '${DIR_UNZIP}/pom.xml' ]; then  // Check for pom.xml in the unzipped directory
                             cd ${DIR_UNZIP}  // Change directory to where pom.xml is located
                             mvn clean install
-                        else
-                            echo "POM file not found, cannot build the project."
-                            error "Build failed due to missing POM file."
                         fi
                     """
 
                     echo "Building Docker image..."
-                    sh "docker build -t ${DOCKER_IMAGE} ${DIR_UNZIP}/"  // Specify the unzipped directory as the context
+                    sh "docker build -t ${DOCKER_IMAGE} ."  // Specify the unzipped directory as the context
                 }
             }
         }
