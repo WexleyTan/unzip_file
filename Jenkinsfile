@@ -20,7 +20,7 @@ pipeline {
                     sh """
                         if [ -f '${FILE_NAME}' ]; then
                             echo "Removing existing files..."
-                            rm -rf ${DIR_UNZIP}/  // Ensure to remove the directory instead of a file
+                            rm -rf ${DIR_UNZIP}  // Ensure to remove the directory instead of a file
                             echo "Unzipping the file..."
                             unzip -o '${FILE_NAME}' -d ${DIR_UNZIP}/
                         else
