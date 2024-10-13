@@ -22,10 +22,6 @@ pipeline {
                             rm -rf ${DIR_UNZIP}  
                             echo "Unzipping the file..."
                             unzip -o '${FILE_NAME}' -d ${DIR_UNZIP}/
-                        else
-                            echo "'${FILE_NAME}' does not exist."
-                            exit 1
-                        fi
                     """
                 }
             }
@@ -37,7 +33,6 @@ pipeline {
                     echo "Building the Maven project..."
                     sh """
                         if [ -f '${DIR_UNZIP}' ]; then
-                            cd ${DIR_UNZIP} 
                             mvn clean install
                         fi
                     """
