@@ -29,15 +29,11 @@ pipeline {
             }
         }
 
-        stage("Clean Package") {
-            steps {
-                echo "Building the application..."
-                sh 'mvn clean install -f demo/pom.xml'
-            }
-        }
-
         stage("Build Docker Image") {
             steps {
+                echo "Building the application..."
+                sh 'mvn clean install'
+                
                 echo "Building Docker image..."
                 sh 'docker build -t ${DOCKER_IMAGE} .'
             }
