@@ -6,7 +6,7 @@ pipeline {
     environment {
         IMAGE = "spring_unzip"
         FILE_NAME = "auto_deploy.zip"
-        DIR_UNZIP = "demo"  // Directory to unzip the files
+        DIR_UNZIP = "pom.xml"  // Directory to unzip the files
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
@@ -36,17 +36,14 @@ pipeline {
                 script {
                     echo "Building the Maven project..."
                     sh """
-                        if [ -f '${DIR_UNZIP}/pom.xml' ]; then
+                        if [ -f '${DIR_UNZIP}' ]; then
                             cd ${DIR_UNZIP} 
                             mvn clean install
-                        else
-                            echo "POM file not found, cannot build the project."
-                            error "Build failed due to missing POM file."
                         fi
                     """
 
                     echo "Building Docker image..."
-                    sh "docker build -t ${DOCKER_IMAGE} ${DIR_UNZIP}/"  // Specify DIR_UNZIP as the context
+                    sh "docker build -t ${DOCKER_IMAGE} ${DIR_UNZIP}"  // Specify DIR_UNZIP as the context
                 }
             }
         }
