@@ -29,21 +29,16 @@ pipeline {
                         sh 'mvn clean install'
 
                         echo "Building Docker image..."
-                        sh 'docker build -t springboot_jenkins .'
+                        sh 'docker build -t unzip_jenkins .'
                     }
                 }
-            }
-        }
-        stage("test") {
-            steps {
-                echo "testing the application"
             }
         }
 
         stage("deploy") {
             steps {
-                sh 'docker start springboot_jenkins || docker run --name springboot_jenkins-v1 -d -p 9090:8080 springboot_jenkins '
-                sh ' docker ps '
+                sh 'docker start unzip_jenkins || docker run --name springboot_jenkins-v1 -d -p 9090:8080 unzip_jenkins '
+        
             }
         }
 
