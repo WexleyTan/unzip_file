@@ -8,6 +8,7 @@ pipeline {
         FILE_NAME = "auto_deploy.zip"
         DIR_UNZIP = "pom.xml"  // Directory to unzip the files
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
+        DOCKER_CONTAINER = "springboot_jenkins"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
 
@@ -42,6 +43,19 @@ pipeline {
                 }
             }
         }
+         stage("test") {
+            steps {
+                echo "testing the application"
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                sh 'docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9090:8080 ${DOCKER_IMAGE} '
+                sh ' docker ps '
+            }
+        }
+    }
     }
 }
 
