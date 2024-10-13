@@ -6,7 +6,7 @@ pipeline {
     environment {
         IMAGE = "spring_unzip"
         FILE_NAME = "auto_deploy.zip"
-        DIR_UNZIP = "demo"  // Corrected: Directory to unzip the files (not 'pom.xml')
+        DIR_UNZIP = "demo" 
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CONTAINER = "springboot_jenkins"
         DOCKER_CREDENTIALS_ID = "dockertoken"
@@ -20,12 +20,9 @@ pipeline {
                     sh """
                         if [ -f '${FILE_NAME}' ]; then
                             echo "Removing existing files..."
-                            rm -rf ${DIR_UNZIP}  // Ensure to remove the directory instead of a file
+                            rm -rf ${DIR_UNZIP}  
                             echo "Unzipping the file..."
                             unzip -o '${FILE_NAME}' -d ${DIR_UNZIP}/
-                        else
-                            echo "'${FILE_NAME}' does not exist."
-                            exit 1  // Exit if the file does not exist
                         fi
                     """
                 }
@@ -37,14 +34,14 @@ pipeline {
                 script {
                     echo "Building the Maven project..."
                     sh """
-                        if [ -f '${DIR_UNZIP}/pom.xml' ]; then  // Check for pom.xml in the unzipped directory
-                            cd ${DIR_UNZIP}  // Change directory to where pom.xml is located
+                        if [ -f '${DIR_UNZIP}/pom.xml' ]; then  
+                            cd ${DIR_UNZIP}  
                             mvn clean install
                         fi
                     """
 
                     echo "Building Docker image..."
-                    sh "docker build -t ${DOCKER_IMAGE} ."  // Specify the unzipped directory as the context
+                    sh "docker build -t ${DOCKER_IMAGE} ."  
                 }
             }
         }
