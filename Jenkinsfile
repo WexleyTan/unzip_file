@@ -27,6 +27,19 @@ pipeline {
                 }
             }
         }
+        stage("Check for pom.xml") {
+            steps {
+                script {
+                    echo "Checking for 'pom.xml'..."
+                    def pomFileExists = sh(script: "test -f demo/pom.xml && echo true || echo false", returnStdout: true).trim()
+                    if (pomFileExists == "true") {
+                        echo "'pom.xml' exists. Proceeding to clean package."
+                    } else {
+                        error "'pom.xml' does not exist. Aborting build."
+                    }
+                }
+            }
+        }
         stage("clean package") {
             steps {
               echo "Building the application..."
