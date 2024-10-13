@@ -18,9 +18,9 @@ pipeline {
                     sh """
                         if [ -f '${FILE_NAME}' ]; then
                             echo "Removing existing files..."
-                            rm -rf demo/  // Remove the demo directory to ensure a clean state
+                            rm -rf ${FILE_NAME}  // Remove the demo directory to ensure a clean state
                             echo "Unzipping the file..."
-                            unzip -o '${FILE_NAME}' -d demo/  // Unzip into the demo directory
+                            unzip -o '${FILE_NAME}'  // Unzip into the demo directory
                         else
                             echo "'${FILE_NAME}' does not exist."
                             exit 1
