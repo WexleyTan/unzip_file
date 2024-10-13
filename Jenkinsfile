@@ -20,7 +20,6 @@ pipeline {
                             rm -rf auto_deploy/
                             echo "Unzipping the file..."
                             unzip -o auto_deploy.zip -d demo/ 
-                            COPY . .
                         else
                             echo "'auto_deploy.zip' does not exist."
                         fi
