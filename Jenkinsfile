@@ -9,7 +9,7 @@ pipeline {
                     sh '''
                         if [ -f 'auto_deploy.zip' ]; then
                             echo "Removing existing files..."
-                            rm -rf auto_deploy/
+                            rm -rf . .
                             echo "Unzipping the file..."
                             unzip -o auto_deploy.zip -d demo/
                         else
@@ -22,17 +22,29 @@ pipeline {
 
         stage("Build") {
             steps {
-                echo "Building Docker image..."
-                sh 'docker build -t unzip_jenkins .'
+                script {
+                    echo "Building Docker image..."
+                    // Specify the directory if needed
+                    sh 'docker build -t unzip_jenkins .' // Adjust path if necessary
                 }
             }
         }
 
-        stage("deploy") {
+        stage("Deploy") {
             steps {
-                sh 'docker start unzip_jenkins || docker run --name springboot_jenkins-v1 -d -p 9090:8080 unzip_jenkins '
+                script {
+                    echo "Deploying the Docker container..."
+                    sh '''
+                        if [ "$(docker ps -q -f name=springboot_jenkins-v1)" ]; then
+                            echo "Starting existing container..."
+                            docker start springboot_jenkins-v1
+                        else
+                            echo "Running a new container..."
+                            docker run --name springboot_jenkins-v1 -d -p 9090:8080 unzip_jenkins
+                        fi
+                    '''
+                }
             }
         }
-
     }
 }
