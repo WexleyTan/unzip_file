@@ -1,19 +1,14 @@
-# BUILD STAGE
+# Stage 2: Run the application
+FROM eclipse-temurin:17-jre-alpine
 
-FROM maven:3.8.7-eclipse-temurin-19 AS build
-
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY . .
+# Copy the JAR file from the build stage
+COPY target/*.jar app.jar
 
-RUN mvn clean package
+# Expose the port that the application will run on
+EXPOSE 8080
 
-# RUN STAGE
-
-FROM eclipse-temurin:22.0.1_8-jre-ubi9-minimal
-
-COPY --from=build /app/target/*.jar /app/app.jar
-
-EXPOSE 9090
-
-CMD ["java", "-jar", "/app/app.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
