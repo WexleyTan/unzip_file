@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        IMAGE = "spring_unzip"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
@@ -28,12 +29,12 @@ pipeline {
             steps {
                 script {
                     echo "Navigating to the project directory..."
-                    dir('. .') { // Update this path as necessary
+                    dir('path/to/your/project/directory') {
                         echo "Building the Maven project..."
                         sh 'mvn clean install'
-
+        
                         echo "Building Docker image..."
-                        sh "docker build -t ${DOCKER_IMAGE} ."
+                        sh 'docker build -t ${DOCKER_IMAGE}.'
                     }
                 }
             }
