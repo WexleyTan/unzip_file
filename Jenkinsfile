@@ -23,28 +23,27 @@ pipeline {
                             unzip -o auto_deploy.zip -d demo/ 
                         else
                             echo "'auto_deploy.zip' does not exist."
+                            exit 1
                         fi
                     """
                 }
             }
         }
-         stages {
-            stage('Test') {
-                steps {
-                    echo "${VERSION}"
-                }
-    
-            }
-    
-        }
-        stage("clean package") {
+
+        stage('Test') {
             steps {
-              echo "Building the application..."
-              sh ' mvn clean install '
+                echo "Version: ${VERSION}"
             }
         }
 
-        stage("Build") {
+        stage("Clean Package") {
+            steps {
+                echo "Building the application..."
+                sh 'mvn clean install -f demo/pom.xml'
+            }
+        }
+
+        stage("Build Docker Image") {
             steps {
                 echo "Building Docker image..."
                 sh 'docker build -t ${DOCKER_IMAGE} .'
@@ -52,3 +51,4 @@ pipeline {
         }
     }
 }
+
