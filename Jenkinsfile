@@ -7,6 +7,7 @@ pipeline {
         IMAGE = "spring_unzip"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
+        VERSION = readMavenPom().getVersion()
     }
     
     stages {
@@ -27,18 +28,14 @@ pipeline {
                 }
             }
         }
-        stage("Check for pom.xml") {
-            steps {
-                script {
-                    echo "Checking for 'pom.xml'..."
-                    def pomFileExists = sh(script: "test -f demo/pom.xml && echo true || echo false", returnStdout: true).trim()
-                    if (pomFileExists == "true") {
-                        echo "'pom.xml' exists. Proceeding to clean package."
-                    } else {
-                        error "'pom.xml' does not exist. Aborting build."
-                    }
+         stages {
+            stage('Test') {
+                steps {
+                    echo "${VERSION}"
                 }
+    
             }
+    
         }
         stage("clean package") {
             steps {
