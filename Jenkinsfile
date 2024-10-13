@@ -1,19 +1,24 @@
 pipeline {
     agent any
-
+    environment {
+        UNZIP_FILE = "auto_deploy.zip"
+        DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
+        DOCKER_CREDENTIALS_ID = "dockertoken"
+    }
+    
     stages {
         stage('Unzip File') {
             steps {
                 script {
-                    echo "Checking if the file 'auto_deploy.zip' exists and unzipping it if present..."
+                    echo "Checking if the file '${env.UNZIP_FILE}' exists and unzipping it if present..."
                     sh '''
-                        if [ -f 'auto_deploy.zip' ]; then
+                        if [ -f "${UNZIP_FILE}" ]; then
                             echo "Removing existing files..."
-                            rm -rf . .
+                            rm -rf *  # Use * to remove all files in the current directory
                             echo "Unzipping the file..."
-                            unzip -o auto_deploy.zip -d demo/
+                            unzip -o "${UNZIP_FILE}" -d demo/
                         else
-                            echo "'auto_deploy.zip' does not exist."
+                            echo "${UNZIP_FILE} does not exist."
                         fi
                     '''
                 }
@@ -25,10 +30,9 @@ pipeline {
                 script {
                     echo "Building Docker image..."
                     // Specify the directory if needed
-                    sh 'docker build -t unzip_jenkins .' // Adjust path if necessary
+                    sh "docker build -t ${DOCKER_IMAGE} ." // Adjust path if necessary
                 }
             }
         }
-
     }
 }
