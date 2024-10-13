@@ -7,7 +7,6 @@ pipeline {
         IMAGE = "spring_unzip"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = "dockertoken"
-        VERSION = readMavenPom().getVersion()
     }
     
     stages {
@@ -27,12 +26,6 @@ pipeline {
                         fi
                     """
                 }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo "Version: ${VERSION}"
             }
         }
 
