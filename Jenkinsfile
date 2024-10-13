@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven 'maven'  // Ensure the Maven tool is correctly specified
+        maven 'maven' 
     }
     environment {
         IMAGE = "spring_unzip"
@@ -18,9 +18,9 @@ pipeline {
                     sh """
                         if [ -f '${FILE_NAME}' ]; then
                             echo "Removing existing files..."
-                            rm -rf ${FILE_NAME}  // Remove the demo directory to ensure a clean state
+                            rm -rf ${FILE_NAME}  
                             echo "Unzipping the file..."
-                            unzip -o '${FILE_NAME}'  // Unzip into the demo directory
+                            unzip -o '${FILE_NAME}' 
                         else
                             echo "'${FILE_NAME}' does not exist."
                             exit 1
@@ -36,7 +36,7 @@ pipeline {
                     echo "Building the Maven project..."
                     sh """
                         if [ -f '${FILE_NAME}/pom.xml' ]; then
-                            cd ${FILE_NAME}  // Change to the directory containing pom.xml
+                            cd ${FILE_NAME} 
                             mvn clean install
                         else
                             echo "POM file not found, cannot build the project."
