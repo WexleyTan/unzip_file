@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     echo "Navigating to the project directory..."
-                    dir('path/to/your/project/directory') { // Update this path as necessary
+                    dir('. .') { // Update this path as necessary
                         echo "Building the Maven project..."
                         sh 'mvn clean install'
 
