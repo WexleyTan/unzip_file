@@ -1,12 +1,12 @@
 pipeline {
     agent any
     tools {
-        maven 'maven' 
+        maven 'maven'
     }
     environment {
         IMAGE = "spring_unzip"
         FILE_NAME = "auto_deploy.zip"
-        DIR_UNZIP = "pom.xml"  // Directory to unzip the files
+        DIR_UNZIP = "demo"  // Corrected: Directory to unzip the files (not 'pom.xml')
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CONTAINER = "springboot_jenkins"
         DOCKER_CREDENTIALS_ID = "dockertoken"
@@ -20,9 +20,13 @@ pipeline {
                     sh """
                         if [ -f '${FILE_NAME}' ]; then
                             echo "Removing existing files..."
-                            rm -rf ${DIR_UNZIP}  
+                            rm -rf ${DIR_UNZIP}/  // Ensure to remove the directory instead of a file
                             echo "Unzipping the file..."
                             unzip -o '${FILE_NAME}' -d ${DIR_UNZIP}/
+                        else
+                            echo "'${FILE_NAME}' does not exist."
+                            exit 1  // Exit if the file does not exist
+                        fi
                     """
                 }
             }
@@ -33,30 +37,41 @@ pipeline {
                 script {
                     echo "Building the Maven project..."
                     sh """
-                        if [ -f '${DIR_UNZIP}' ]; then
+                        if [ -f '${DIR_UNZIP}/pom.xml' ]; then  // Check for pom.xml in the unzipped directory
+                            cd ${DIR_UNZIP}  // Change directory to where pom.xml is located
                             mvn clean install
+                        else
+                            echo "POM file not found, cannot build the project."
+                            error "Build failed due to missing POM file."
                         fi
                     """
 
                     echo "Building Docker image..."
-                    sh "docker build -t ${DOCKER_IMAGE} ."  
+                    sh "docker build -t ${DOCKER_IMAGE} ${DIR_UNZIP}/"  // Specify the unzipped directory as the context
                 }
             }
         }
-         stage("test") {
+
+        stage("Test") {
             steps {
-                echo "testing the application"
+                script {
+                    echo "Testing the application"
+                    // Add testing commands here if needed
+                }
             }
         }
 
-        stage("deploy") {
+        stage("Deploy") {
             steps {
-                sh 'docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9090:8080 ${DOCKER_IMAGE} '
-                sh ' docker ps '
+                script {
+                    echo "Deploying the Docker container..."
+                    sh """
+                        docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9090:8080 ${DOCKER_IMAGE}
+                    """
+                    sh 'docker ps'  // List running Docker containers
+                }
             }
         }
-    }
     }
 }
-
 
