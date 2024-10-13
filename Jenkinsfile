@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'maven'
+    }
     environment {
         IMAGE = "spring_unzip"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
@@ -24,18 +27,17 @@ pipeline {
                 }
             }
         }
+        stage("clean package") {
+            steps {
+              echo "Building the application..."
+              sh ' mvn clean install '
+            }
+        }
 
         stage("Build") {
             steps {
-                script {
-                    echo "Navigating to the project directory..."
-                    dir('path/to/your/project/directory') {
-                        echo "Building the Maven project..."
-                        sh 'mvn clean install'
-        
-                        echo "Building Docker image..."
-                        sh 'docker build -t springboot_jenkins .'
-                    }
+                echo "Building Docker image..."
+                sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
         }
