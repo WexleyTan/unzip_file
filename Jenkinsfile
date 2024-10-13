@@ -22,15 +22,8 @@ pipeline {
 
         stage("Build") {
             steps {
-                script {
-                    echo "Navigating to the project directory..."
-                    dir('demo/auto_deploy') { // Update this path to where your pom.xml is located
-                        echo "Building the Maven project..."
-                        sh 'mvn clean install'
-
-                        echo "Building Docker image..."
-                        sh 'docker build -t unzip_jenkins .'
-                    }
+                echo "Building Docker image..."
+                sh 'docker build -t unzip_jenkins .'
                 }
             }
         }
@@ -38,7 +31,6 @@ pipeline {
         stage("deploy") {
             steps {
                 sh 'docker start unzip_jenkins || docker run --name springboot_jenkins-v1 -d -p 9090:8080 unzip_jenkins '
-        
             }
         }
 
