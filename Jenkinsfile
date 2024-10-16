@@ -8,7 +8,7 @@ pipeline {
         FILE_NAME = "auto_deploy.zip"
         DIR_UNZIP = "demo" 
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
-        DOCKER_CONTAINER = "springboot_jenkin"
+        DOCKER_CONTAINER = "springboot_container"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
 
@@ -60,9 +60,9 @@ pipeline {
                 script {
                     echo "Deploying the Docker container..."
                     sh """
-                        docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9090:8080 ${DOCKER_IMAGE}
+                        docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9091:8080 ${DOCKER_IMAGE}
                     """
-                    sh 'docker ps'  // List running Docker containers
+                    sh 'docker ps'  
                 }
             }
         }
