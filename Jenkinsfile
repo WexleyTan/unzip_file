@@ -8,7 +8,7 @@ pipeline {
         FILE_NAME = "auto_deploy.zip"
         DIR_UNZIP = "demo" 
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
-        DOCKER_CONTAINER = "springboot_jenkins"
+        DOCKER_CONTAINER = "springboot_jenkin"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
 
