@@ -22,7 +22,7 @@ pipeline {
                             echo "Removing existing files..."
                             rm -rf ${DIR_UNZIP}  
                             echo "Unzipping the file..."
-                            unzip -o '${FILE_NAME}' -d ${DIR_UNZIP}/
+                            unzip -o '${FILE_NAME}'
                         fi
                     """
                 }
