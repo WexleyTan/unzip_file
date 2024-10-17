@@ -8,7 +8,7 @@ pipeline {
         FILE_NAME = "auto_deploy.zip"
         DIR_UNZIP = "demo" 
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
-        DOCKER_CONTAINER = "springboot_container"
+        DOCKER_CONTAINER = "springboot_containerv"
         DOCKER_CREDENTIALS_ID = "dockertoken"
     }
 
@@ -46,21 +46,12 @@ pipeline {
             }
         }
 
-        stage("Test") {
-            steps {
-                script {
-                    echo "Testing the application"
-                    // Add testing commands here if needed
-                }
-            }
-        }
-
         stage("Deploy") {
             steps {
                 script {
                     echo "Deploying the Docker container..."
                     sh """
-                        docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9091:8080 ${DOCKER_IMAGE}
+                        docker start ${DOCKER_CONTAINER} || docker run --name ${DOCKER_CONTAINER} -d -p 9092:8080 ${DOCKER_IMAGE}
                     """
                     sh 'docker ps'  
                 }
